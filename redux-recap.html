@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux 복습</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.0/redux.min.js"></script>
+  </head>
+  <body>
+    <div id="subject"></div>
+    <div id="title"></div>
+    <div id="control"></div>
+    <div id="article"></div>
+    <script>
+      function subject() {
+        document.querySelector("#subject").innerHTML = `
+        <header>
+            <h1>책 제목/작가</h1>
+            <h4>목록채우기</h4>
+        </header>
+        `;
+      }
+      function title() {
+        const state = store.getState();
+        console.log(state);
+        let i = 0;
+        let liTags = "";
+        while (i < state.contents.length) {
+          liTags =
+            liTags +
+            `
+              <li>
+                <a onclick="
+                  event.preventDefault();
+                  let action = {type:'SELECT', id:${state.contents[i].id}}
+                  store.dispatch(action);
+                  " href=${state.contents[i].id}>${state.contents[i].title}</a>
+              </li>
+            `;
+          i = i + 1;
+        }
+        document.querySelector("#title").innerHTML = `
+        <nav>
+            <ol>
+                ${liTags}
+            </ol>
+        </nav>
+        `;
+      }
+      function control() {
+        document.querySelector("#control").innerHTML = `
+        <ul>
+            <li><a onclick="event.preventDefault();" href="/create">create</a></li>
+            <li><input type="button" value="delete" /></li>
+        </ul>
+        `;
+      }
+      function article() {
+        const state = store.getState();
+
+        if (state.mode == "welcome") {
+          document.querySelector("#article").innerHTML = `
+          <form>
+            <p>
+              <input type="text" placeholder="제목">
+            </p>
+            <p>
+              <textarea placeholder="작가를 입력해주세요"></textarea>
+            </p>
+            <p>
+              <input type="submit" >
+            </p>
+            </form>
+          `;
+        }
+      }
+      function reducer(state, action) {
+        if (state === undefined) {
+          return {
+            mode: "welcome",
+            selected_id: 2,
+            contents: [
+              { id: 1, title: "이기적 유전자", author: "리처드 도킨스" },
+              { id: 2, title: "철학은 어떻게 삶의 무기가 되는가", author: "야마구치 슈" },
+              { id: 3, title: "모순", author: "양귀자" },
+            ],
+          };
+        }
+        if (action == "SELECT") {
+        }
+      }
+
+      const store = Redux.createStore(reducer);
+
+      subject();
+      title();
+      control();
+      article();
+    </script>
+  </body>
+</html>
